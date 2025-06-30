@@ -130,7 +130,7 @@ func main() {
 		}
 	}()
 
-	logger.Info("github.com/XXueTu/temjob started successfully")
+	logger.Info("temjob started successfully")
 	logger.Info("Web UI available", zap.String("url", "http://localhost:"+cfg.Server.Port))
 
 	// Wait for shutdown signal

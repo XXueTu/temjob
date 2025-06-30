@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script>
+        // Prevent theme flash by setting theme before page renders
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{.title}}</title>
@@ -9,25 +16,116 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            --warning-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
-            --danger-gradient: linear-gradient(135deg, #ff6b6b 0%, #ffa726 100%);
-            --card-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            --nav-bg: rgba(255,255,255,0.95);
+            /* Light Theme Variables */
+            --primary-gradient-light: linear-gradient(135deg, #007BFF 0%, #0056B3 100%);
+            --secondary-gradient-light: linear-gradient(135deg, #6C757D 0%, #495057 100%);
+            --success-gradient-light: linear-gradient(135deg, #28A745 0%, #155724 100%);
+            --warning-gradient-light: linear-gradient(135deg, #FFC107 0%, #E0A800 100%);
+            --danger-gradient-light: linear-gradient(135deg, #DC3545 0%, #B21F2D 100%);
+            --accent-gradient-light: linear-gradient(135deg, #6F42C1 0%, #5A2D91 100%);
+            --bg-light: #FFFFFF;
+            --card-bg-light: rgba(255, 255, 255, 0.95);
+            --card-border-light: rgba(0, 123, 255, 0.15);
+            --text-primary-light: #212529;
+            --text-secondary-light: #6C757D;
+            --nav-bg-light: rgba(255, 255, 255, 0.98);
+            --glow-light: 0 0 15px rgba(0, 123, 255, 0.1);
+            
+            /* Dark Theme Variables */
+            --primary-gradient-dark: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            --secondary-gradient-dark: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --success-gradient-dark: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            --warning-gradient-dark: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            --danger-gradient-dark: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            --accent-gradient-dark: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            --bg-dark: #0F172A;
+            --card-bg-dark: rgba(15, 23, 42, 0.8);
+            --card-border-dark: rgba(102, 126, 234, 0.2);
+            --text-primary-dark: #F1F5F9;
+            --text-secondary-dark: #94A3B8;
+            --nav-bg-dark: rgba(15, 23, 42, 0.95);
+            --glow-dark: 0 0 20px rgba(102, 126, 234, 0.3);
+            
+            /* Active Theme Variables (default to dark) */
+            --primary-gradient: var(--primary-gradient-dark);
+            --secondary-gradient: var(--secondary-gradient-dark);
+            --success-gradient: var(--success-gradient-dark);
+            --warning-gradient: var(--warning-gradient-dark);
+            --danger-gradient: var(--danger-gradient-dark);
+            --accent-gradient: var(--accent-gradient-dark);
+            --bg-color: var(--bg-dark);
+            --card-bg: var(--card-bg-dark);
+            --card-border: var(--card-border-dark);
+            --text-primary: var(--text-primary-dark);
+            --text-secondary: var(--text-secondary-dark);
+            --nav-bg: var(--nav-bg-dark);
+            --glow-primary: var(--glow-dark);
+        }
+        
+        /* Light Theme Override */
+        [data-theme="light"] {
+            --primary-gradient: var(--primary-gradient-light);
+            --secondary-gradient: var(--secondary-gradient-light);
+            --success-gradient: var(--success-gradient-light);
+            --warning-gradient: var(--warning-gradient-light);
+            --danger-gradient: var(--danger-gradient-light);
+            --accent-gradient: var(--accent-gradient-light);
+            --bg-color: var(--bg-light);
+            --card-bg: var(--card-bg-light);
+            --card-border: var(--card-border-light);
+            --text-primary: var(--text-primary-light);
+            --text-secondary: var(--text-secondary-light);
+            --nav-bg: var(--nav-bg-light);
+            --glow-primary: var(--glow-light);
+        }
+        
+        /* Optimize performance with will-change and transform3d */
+        html {
+            scroll-behavior: smooth;
         }
         
         body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            transform: translateZ(0);
+            backface-visibility: hidden;
+            perspective: 1000;
+        }
+        
+        /* Selective transitions - only animate what's necessary */
+        .navbar,
+        .stats-card,
+        .chart-card,
+        .recent-item,
+        .theme-toggle {
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+            will-change: background-color, color, border-color, box-shadow;
+        }
+        
+        body {
+            background: var(--bg-color);
+            background-image: 
+                radial-gradient(circle at 20% 20%, rgba(0, 123, 255, 0.05) 0%, transparent 60%),
+                radial-gradient(circle at 80% 80%, rgba(108, 117, 125, 0.03) 0%, transparent 60%);
             min-height: 100vh;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text-primary);
+            padding-top: 80px; /* 为固定导航栏留出空间 */
+        }
+        
+        [data-theme="dark"] body {
+            background-image: 
+                radial-gradient(circle at 20% 20%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(118, 75, 162, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 60%, rgba(240, 147, 251, 0.05) 0%, transparent 50%);
         }
         
         .navbar {
             background: var(--nav-bg) !important;
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255,255,255,0.2);
-            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--card-border);
+            box-shadow: var(--glow-primary);
+            min-height: 70px;
+            padding-top: 0.75rem;
+            padding-bottom: 0.75rem;
         }
         
         .navbar-brand {
@@ -39,28 +137,76 @@
         }
         
         .nav-link {
-            color: #4a5568 !important;
+            color: var(--text-secondary) !important;
             font-weight: 500;
             transition: all 0.3s ease;
+            padding: 0.5rem 1rem !important;
+            margin: 0 0.25rem;
+            border-radius: 8px;
         }
         
         .nav-link:hover, .nav-link.active {
-            color: #667eea !important;
+            color: var(--text-primary) !important;
+            background: rgba(0, 123, 255, 0.1);
+        }
+        
+        .navbar-nav {
+            flex-direction: row !important;
+        }
+        
+        /* Navbar toggler styles */
+        .navbar-toggler {
+            border: 1px solid var(--card-border);
+            padding: 0.25rem 0.5rem;
+            border-radius: 8px;
+            background: var(--card-bg);
+        }
+        
+        .navbar-toggler:focus {
+            box-shadow: none;
+        }
+        
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%2894, 163, 184, 0.75%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+        }
+        
+        [data-theme="light"] .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%2833, 37, 41, 0.75%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
         }
         
         .stats-card {
-            background: white;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
             border-radius: 20px;
-            box-shadow: var(--card-shadow);
-            border: none;
-            transition: all 0.3s ease;
+            box-shadow: var(--glow-primary);
             overflow: hidden;
             position: relative;
+            backdrop-filter: blur(20px);
+        }
+        
+        .stats-card {
+            will-change: transform;
+        }
+        
+        .stats-card:hover {
+            transition: transform 0.2s ease;
+        }
+        
+        .stats-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--primary-gradient);
+            opacity: 0.8;
         }
         
         .stats-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            box-shadow: var(--glow-primary);
+            border-color: var(--card-border);
         }
         
         .stats-card .card-body {
@@ -76,6 +222,17 @@
             justify-content: center;
             font-size: 1.5rem;
             margin-bottom: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stats-icon::before {
+            content: '';
+            position: absolute;
+            inset: 1px;
+            border-radius: 14px;
+            background: var(--card-bg);
+            z-index: -1;
         }
         
         .stats-number {
@@ -83,41 +240,158 @@
             font-weight: 700;
             line-height: 1;
             margin-bottom: 0.5rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
         
         .stats-label {
-            color: #718096;
+            color: var(--text-secondary);
             font-weight: 500;
             font-size: 0.9rem;
         }
         
         .chart-card {
-            background: white;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
             border-radius: 20px;
-            box-shadow: var(--card-shadow);
-            border: none;
+            box-shadow: var(--glow-primary);
+            backdrop-filter: blur(20px);
         }
         
         .section-title {
             font-size: 1.5rem;
             font-weight: 700;
-            color: #2d3748;
+            color: var(--text-primary);
             margin-bottom: 2rem;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
         
         .recent-item {
-            background: white;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
             border-radius: 12px;
             padding: 1rem;
             margin-bottom: 0.75rem;
-            border-left: 4px solid #e2e8f0;
-            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+            background-clip: padding-box;
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+        
+        .recent-item {
+            will-change: transform;
+        }
+        
+        .recent-item:hover {
+            transition: transform 0.2s ease;
+        }
+        
+        .recent-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: var(--secondary-gradient);
+            border-radius: 0 4px 4px 0;
+            opacity: 0.6;
         }
         
         .recent-item:hover {
             transform: translateX(5px);
-            border-left-color: #667eea;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            box-shadow: var(--glow-primary);
+            border-color: var(--card-border);
+        }
+        
+        .recent-item:hover::before {
+            opacity: 1;
+            box-shadow: var(--glow-primary);
+        }
+        
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .card-title {
+            color: var(--text-primary);
+            font-weight: 600;
+            background: var(--secondary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .text-dark {
+            color: var(--text-primary) !important;
+        }
+        
+        .text-muted {
+            color: var(--text-secondary) !important;
+        }
+        
+        .bg-primary-gradient { background: var(--primary-gradient); }
+        .bg-success-gradient { background: var(--success-gradient); }
+        .bg-warning-gradient { background: var(--warning-gradient); }
+        .bg-danger-gradient { background: var(--danger-gradient); }
+        
+        .theme-toggle {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            cursor: pointer;
+        }
+        
+        .theme-toggle:hover {
+            transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+            background: var(--primary-gradient);
+            color: white;
+            border-color: transparent;
+        }
+        
+        /* Additional styles for missing classes */
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .chart-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            box-shadow: var(--glow-primary);
+            backdrop-filter: blur(20px);
+        }
+        
+        .recent-item {
+            padding: 1rem;
+            border-bottom: 1px solid var(--card-border);
+            transition: background-color 0.3s ease;
+        }
+        
+        .recent-item:hover {
+            background: rgba(0, 123, 255, 0.05);
+            border-radius: 8px;
+        }
+        
+        .recent-item:last-child {
+            border-bottom: none;
         }
         
         .status-badge {
@@ -129,10 +403,44 @@
             letter-spacing: 0.5px;
         }
         
-        .bg-primary-gradient { background: var(--primary-gradient); }
-        .bg-success-gradient { background: var(--success-gradient); }
-        .bg-warning-gradient { background: var(--warning-gradient); }
-        .bg-danger-gradient { background: var(--danger-gradient); }
+                 /* Responsive navigation */
+         @media (max-width: 991.98px) {
+             body {
+                 padding-top: 70px; /* 移动端减少一些间距 */
+             }
+             
+             .navbar-collapse {
+                 background: var(--nav-bg);
+                 border: 1px solid var(--card-border);
+                 border-radius: 10px;
+                 margin-top: 1rem;
+                 padding: 1rem;
+                 backdrop-filter: blur(20px);
+                 position: absolute;
+                 top: 100%;
+                 left: 15px;
+                 right: 15px;
+                 z-index: 1000;
+             }
+             
+             .navbar-nav {
+                 flex-direction: column !important;
+                 margin-bottom: 1rem;
+             }
+             
+             .nav-link {
+                 margin: 0.25rem 0 !important;
+                 padding: 0.75rem 1rem !important;
+                 border-radius: 8px;
+             }
+             
+             .ms-auto {
+                 margin-left: 0 !important;
+                 text-align: center;
+             }
+             
+             /* 导航栏展开时不影响页面布局，因为使用了绝对定位 */
+         }
     </style>
 </head>
 <body>
@@ -141,18 +449,31 @@
             <a class="navbar-brand" href="/">
                 <i class="fas fa-project-diagram me-2"></i>TemJob
             </a>
-            <div class="navbar-nav">
-                <a class="nav-link active" href="/">
-                    <i class="fas fa-tachometer-alt me-1"></i>Dashboard
-                </a>
-                <a class="nav-link" href="/workflows">
-                    <i class="fas fa-sitemap me-1"></i>Workflows
-                </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <div class="navbar-nav ms-4">
+                    <a class="nav-link active" href="/">
+                        <i class="fas fa-tachometer-alt me-1"></i>Dashboard
+                    </a>
+                    <a class="nav-link" href="/workflows">
+                        <i class="fas fa-sitemap me-1"></i>Workflows
+                    </a>
+                </div>
+                <div class="ms-auto">
+                    <button class="theme-toggle" onclick="toggleTheme()">
+                        <i class="fas fa-moon" id="theme-icon"></i>
+                    </button>
+                </div>
             </div>
         </div>
     </nav>
 
-    <div class="container" style="margin-top: 100px;">
+    <div class="container">
         <div class="mb-5">
             <h1 class="section-title">
                 <i class="fas fa-chart-line me-3"></i>Workflow Analytics
@@ -352,6 +673,45 @@
             loadStats();
             loadRecentWorkflows();
         }, 30000);
+        
+        // Theme Management
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            const themeIcon = document.getElementById('theme-icon');
+            themeIcon.className = newTheme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
+        }
+        
+        // Initialize theme immediately to prevent flash
+        function initializeTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            
+            // Set theme immediately without transition
+            document.documentElement.style.transition = 'none';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            
+            // Force reflow and re-enable transitions
+            document.documentElement.offsetHeight;
+            document.documentElement.style.transition = '';
+            
+            // Update icon when DOM is ready
+            const updateIcon = () => {
+                const themeIcon = document.getElementById('theme-icon');
+                if (themeIcon) {
+                    themeIcon.className = savedTheme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
+                } else {
+                    setTimeout(updateIcon, 10);
+                }
+            };
+            updateIcon();
+        }
+        
+        // Initialize theme immediately
+        initializeTheme();
     </script>
 </body>
 </html>
