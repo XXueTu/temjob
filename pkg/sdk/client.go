@@ -6,11 +6,12 @@ import (
 
 	"github.com/go-redis/redis/v8"
 	"go.uber.org/zap"
-	"temjob/pkg"
-	"temjob/pkg/queue"
-	"temjob/pkg/state"
-	"temjob/pkg/worker"
-	"temjob/pkg/workflow"
+
+	"github.com/XXueTu/temjob/pkg"
+	"github.com/XXueTu/temjob/pkg/queue"
+	"github.com/XXueTu/temjob/pkg/state"
+	"github.com/XXueTu/temjob/pkg/worker"
+	"github.com/XXueTu/temjob/pkg/workflow"
 )
 
 type Client struct {

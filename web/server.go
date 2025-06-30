@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 
-	"temjob/pkg"
+	"github.com/XXueTu/temjob/pkg"
 )
 
 type Server struct {

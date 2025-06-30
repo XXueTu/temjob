@@ -9,8 +9,8 @@ import (
 	"github.com/go-redis/redis/v8"
 	"go.uber.org/zap"
 
-	"temjob/pkg"
-	cstate "temjob/pkg/state"
+	"github.com/XXueTu/temjob/pkg"
+	cstate "github.com/XXueTu/temjob/pkg/state"
 )
 
 const (

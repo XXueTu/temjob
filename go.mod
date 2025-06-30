@@ -1,4 +1,4 @@
-module temjob
+module github.com/XXueTu/temjob
 
 go 1.23.0
 

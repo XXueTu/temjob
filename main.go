@@ -17,15 +17,15 @@ import (
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 
-	"temjob/pkg"
-	"temjob/pkg/config"
-	"temjob/pkg/models"
-	"temjob/pkg/queue"
-	"temjob/pkg/sdk"
-	"temjob/pkg/state"
-	"temjob/pkg/worker"
-	"temjob/pkg/workflow"
-	"temjob/web"
+	"github.com/XXueTu/temjob/pkg"
+	"github.com/XXueTu/temjob/pkg/config"
+	"github.com/XXueTu/temjob/pkg/models"
+	"github.com/XXueTu/temjob/pkg/queue"
+	"github.com/XXueTu/temjob/pkg/sdk"
+	"github.com/XXueTu/temjob/pkg/state"
+	"github.com/XXueTu/temjob/pkg/worker"
+	"github.com/XXueTu/temjob/pkg/workflow"
+	"github.com/XXueTu/temjob/web"
 )
 
 func main() {
@@ -130,7 +130,7 @@ func main() {
 		}
 	}()
 
-	logger.Info("TemJob started successfully")
+	logger.Info("github.com/XXueTu/temjob started successfully")
 	logger.Info("Web UI available", zap.String("url", "http://localhost:"+cfg.Server.Port))
 
 	// Wait for shutdown signal

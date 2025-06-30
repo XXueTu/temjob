@@ -7,7 +7,8 @@ import (
 	"time"
 
 	"go.uber.org/zap"
-	"temjob/pkg"
+
+	"github.com/XXueTu/temjob/pkg"
 )
 
 type Engine struct {
@@ -41,7 +42,7 @@ func (e *Engine) SubmitWorkflow(ctx context.Context, workflowName string, input 
 	e.mu.RLock()
 	definition, exists := e.definitions[workflowName]
 	e.mu.RUnlock()
-	
+
 	if !exists {
 		return "", fmt.Errorf("workflow definition not found: %s", workflowName)
 	}
@@ -124,14 +125,14 @@ func (e *Engine) executeWorkflow(ctx context.Context, workflowID string, definit
 func (e *Engine) executeWorkflowTasks(ctx context.Context, workflowID string, definition pkg.WorkflowDefinition) {
 	completedTasks := make(map[string]*pkg.Task)
 	workflowContext := make(map[string]interface{})
-	
+
 	// Get initial workflow input
 	workflow, err := e.stateManager.GetWorkflow(ctx, workflowID)
 	if err != nil {
 		e.failWorkflow(ctx, workflowID, fmt.Sprintf("failed to get workflow: %v", err))
 		return
 	}
-	
+
 	// Copy initial input to context
 	for k, v := range workflow.Input {
 		workflowContext[k] = v

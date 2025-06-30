@@ -2,7 +2,8 @@ package sdk
 
 import (
 	"context"
-	"temjob/pkg"
+
+	"github.com/XXueTu/temjob/pkg"
 )
 
 type WorkflowBuilder struct {

@@ -8,7 +8,8 @@ import (
 
 	"github.com/google/uuid"
 	"go.uber.org/zap"
-	"temjob/pkg"
+
+	"github.com/XXueTu/temjob/pkg"
 )
 
 type Worker struct {

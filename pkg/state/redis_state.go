@@ -7,7 +7,7 @@ import (
 
 	"github.com/go-redis/redis/v8"
 
-	"temjob/pkg"
+	"github.com/XXueTu/temjob/pkg"
 )
 
 const (

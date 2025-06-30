@@ -6,7 +6,7 @@ import (
 	"log"
 	"time"
 
-	"temjob/pkg/sdk"
+	"github.com/XXueTu/temjob/pkg/sdk"
 )
 
 func main() {
@@ -25,11 +25,11 @@ func main() {
 	client.RegisterTaskHandler("send_email", sdk.SimpleTaskHandler(func(input map[string]interface{}) (map[string]interface{}, error) {
 		recipient := input["recipient"].(string)
 		subject := input["subject"].(string)
-		
+
 		// Simulate sending email
 		fmt.Printf("Sending email to %s with subject: %s\n", recipient, subject)
 		time.Sleep(1 * time.Second)
-		
+
 		return map[string]interface{}{
 			"email_sent": true,
 			"sent_at":    time.Now().Format(time.RFC3339),
@@ -38,9 +38,9 @@ func main() {
 
 	client.RegisterTaskHandler("log_activity", sdk.SimpleTaskHandler(func(input map[string]interface{}) (map[string]interface{}, error) {
 		activity := input["activity"].(string)
-		
+
 		fmt.Printf("Logging activity: %s\n", activity)
-		
+
 		return map[string]interface{}{
 			"logged": true,
 			"log_id": "log_" + time.Now().Format("20060102150405"),
@@ -64,7 +64,7 @@ func main() {
 
 	// Start engine and worker
 	ctx := context.Background()
-	
+
 	go func() {
 		if err := client.StartEngine(ctx); err != nil {
 			log.Printf("Engine error: %v", err)

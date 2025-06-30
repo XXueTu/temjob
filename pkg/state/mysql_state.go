@@ -9,14 +9,15 @@ import (
 	"github.com/go-redis/redis/v8"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
-	"temjob/pkg"
-	"temjob/pkg/models"
+
+	"github.com/XXueTu/temjob/pkg"
+	"github.com/XXueTu/temjob/pkg/models"
 )
 
 type MySQLStateManager struct {
-	db     *gorm.DB
-	redis  *redis.Client
-	logger *zap.Logger
+	db       *gorm.DB
+	redis    *redis.Client
+	logger   *zap.Logger
 	cacheTTL time.Duration
 }
 
@@ -59,7 +60,7 @@ func (s *MySQLStateManager) SaveWorkflow(ctx context.Context, workflow *pkg.Work
 
 func (s *MySQLStateManager) GetWorkflow(ctx context.Context, workflowID string) (*pkg.Workflow, error) {
 	cacheKey := "workflow:" + workflowID
-	
+
 	if cached, err := s.redis.Get(ctx, cacheKey).Result(); err == nil {
 		var workflow pkg.Workflow
 		if json.Unmarshal([]byte(cached), &workflow) == nil {
@@ -78,7 +79,7 @@ func (s *MySQLStateManager) GetWorkflow(ctx context.Context, workflowID string) 
 	}
 
 	workflow := s.modelToWorkflow(&workflowModel)
-	
+
 	workflowJSON, _ := json.Marshal(workflow)
 	s.redis.Set(ctx, cacheKey, workflowJSON, s.cacheTTL)
 
@@ -120,7 +121,7 @@ func (s *MySQLStateManager) SaveTask(ctx context.Context, task *pkg.Task) error 
 
 func (s *MySQLStateManager) GetTask(ctx context.Context, taskID string) (*pkg.Task, error) {
 	cacheKey := "task:" + taskID
-	
+
 	if cached, err := s.redis.Get(ctx, cacheKey).Result(); err == nil {
 		var task pkg.Task
 		if json.Unmarshal([]byte(cached), &task) == nil {
@@ -139,7 +140,7 @@ func (s *MySQLStateManager) GetTask(ctx context.Context, taskID string) (*pkg.Ta
 	}
 
 	task := s.modelToTask(&taskModel)
-	
+
 	taskJSON, _ := json.Marshal(task)
 	s.redis.Set(ctx, cacheKey, taskJSON, s.cacheTTL)
 
@@ -148,7 +149,7 @@ func (s *MySQLStateManager) GetTask(ctx context.Context, taskID string) (*pkg.Ta
 
 func (s *MySQLStateManager) GetWorkflowTasks(ctx context.Context, workflowID string) ([]*pkg.Task, error) {
 	cacheKey := "workflow_tasks:" + workflowID
-	
+
 	if cached, err := s.redis.Get(ctx, cacheKey).Result(); err == nil {
 		var tasks []*pkg.Task
 		if json.Unmarshal([]byte(cached), &tasks) == nil {
@@ -245,21 +246,21 @@ func (s *MySQLStateManager) InvalidateCache(ctx context.Context, workflowID stri
 	pipe := s.redis.Pipeline()
 	pipe.Del(ctx, "workflow:"+workflowID)
 	pipe.Del(ctx, "workflow_tasks:"+workflowID)
-	
+
 	tasks, err := s.GetWorkflowTasks(ctx, workflowID)
 	if err == nil {
 		for _, task := range tasks {
 			pipe.Del(ctx, "task:"+task.ID)
 		}
 	}
-	
+
 	_, err = pipe.Exec(ctx)
 	return err
 }
 
 func (s *MySQLStateManager) LogWorkflowExecution(ctx context.Context, workflowID, taskID, level, message string, metadata map[string]interface{}) error {
 	metadataJSON, _ := json.Marshal(metadata)
-	
+
 	log := &models.WorkflowExecutionLog{
 		WorkflowID: workflowID,
 		TaskID:     taskID,
