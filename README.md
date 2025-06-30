@@ -1,6 +1,22 @@
 # TemJob - 分布式任务调度框架
 
-TemJob 是一个基于 Redis 和 MySQL 的分布式任务调度框架，参考了 Temporal 的设计理念，提供工作流编排、任务生命周期管理和 Web UI 管理界面。
+<div align="center">
+
+[![Go Version](https://img.shields.io/badge/Go-1.23+-00ADD8?style=flat&logo=go)](https://golang.org)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Redis](https://img.shields.io/badge/Redis-Required-red.svg)](https://redis.io)
+[![MySQL](https://img.shields.io/badge/MySQL-Required-blue.svg)](https://mysql.com)
+[![Docker](https://img.shields.io/badge/Docker-Supported-blue.svg)](https://docker.com)
+
+**🚀 高性能的分布式任务调度与工作流编排引擎**
+
+[快速开始](#快速开始) • [文档](#文档) • [示例](#示例) • [部署](#部署) • [贡献](#贡献)
+
+</div>
+
+---
+
+TemJob 是一个基于 Redis 和 MySQL 的分布式任务调度框架，参考了 Temporal 的设计理念，提供工作流编排、任务生命周期管理和现代化的 Web UI 管理界面。
 
 ## 特性
 

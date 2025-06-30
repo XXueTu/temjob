@@ -1,0 +1,44 @@
+# TemJob 配置文件示例
+# 复制此文件为 config.yaml 并修改相应的配置
+
+# 数据库配置
+database:
+  mysql:
+    host: localhost          # MySQL 主机地址
+    port: 3306              # MySQL 端口
+    user: root              # 数据库用户名
+    password: your_password # 数据库密码
+    database: temjob        # 数据库名称
+    charset: utf8mb4        # 字符集
+    parse_time: true        # 解析时间
+    loc: Local              # 时区
+
+# Redis 配置
+redis:
+  host: localhost          # Redis 主机地址
+  port: 6379              # Redis 端口
+  password: ""            # Redis 密码 (如果有)
+  db: 0                   # Redis 数据库编号
+  pool_size: 10           # 连接池大小
+
+# 服务器配置
+server:
+  port: 8088              # HTTP 服务端口
+  mode: debug             # 运行模式: debug, release
+
+# 工作器配置
+worker:
+  concurrency: 10         # 并发任务数
+  timeout: 30m            # 任务超时时间
+  retry_delay: 5s         # 重试延迟
+
+# 引擎配置
+engine:
+  monitor_interval: 10s           # 监控间隔
+  max_workflow_timeout: 24h       # 工作流最大执行时间
+
+# 日志配置
+logging:
+  level: info             # 日志级别: debug, info, warn, error
+  format: json            # 日志格式: json, console
+  output: stdout          # 输出: stdout, stderr, file
