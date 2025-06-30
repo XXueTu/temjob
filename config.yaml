@@ -1,0 +1,35 @@
+database:
+  mysql:
+    host: 10.99.51.9
+    port: 3306
+    user: root
+    password: Root@123
+    database: wk
+    charset: utf8mb4
+    parse_time: true
+    loc: Local
+
+redis:
+  host: 10.99.51.6
+  port: 6379
+  password: "redis123"
+  db: 2
+  pool_size: 10
+
+server:
+  port: 8088
+  mode: debug  # debug, release
+
+worker:
+  concurrency: 10
+  timeout: 30m
+  retry_delay: 5s
+
+engine:
+  monitor_interval: 10s
+  max_workflow_timeout: 24h
+
+logging:
+  level: info
+  format: json
+  output: stdout
